@@ -1,0 +1,33 @@
+import type { WeatherApiResponse } from "../model/type";
+
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+const BASE_URL = "https://api.openweathermap.org/data/2.5";
+
+export const weatherApi = {
+  getCurrentWeather: async (city: string): Promise<WeatherApiResponse> => {
+    const response = await fetch(
+      `${BASE_URL}/weather?q=${city}&appid=${API_KEY}&units=metric&lang=kr`
+    );
+
+    if (!response.ok) {
+      throw new Error("날씨 정보를 가져오는데 실패했습니다");
+    }
+
+    return response.json();
+  },
+
+  getCurrentWeatherByCoords: async (
+    lat: number,
+    lon: number
+  ): Promise<WeatherApiResponse> => {
+    const response = await fetch(
+      `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`
+    );
+
+    if (!response.ok) {
+      throw new Error("날씨 정보를 가져오는데 실패했습니다");
+    }
+
+    return response.json();
+  },
+};

@@ -1,24 +1,31 @@
-import { CurrentCity } from "@/entities/current-city/ui/CurrentCity";
+import { useCoordinatesByCity } from "@/entities/weather/model/useWeather";
 
 export function WeatherDashboard() {
+  const { data: coordinates, error } = useCoordinatesByCity("서울");
+
+  if (error) {
+    return (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        좌표 정보를 불러올 수 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* 현재 날씨 (entity) */}
-      {/* <WeatherCard weather={mockWeather} /> */}
-      {/* 추가 정보 영역 */}
       <div className="flex flex-col gap-4 p-4">
-        <CurrentCity />
-        {/* 시간별 예보 */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="font-semibold mb-2">시간별 예보</h3>
-          <p className="text-gray-500">준비 중...</p>
+        <div className="space-y-6">
+          {coordinates && (
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Coordinates</h2>
+              <p>Latitude: {coordinates.lat}</p>
+              <p>Longitude: {coordinates.lon}</p>
+            </div>
+          )}
+          {/* {weather && (
+            <CurrentWeather weather={weather} isLoading={isLoading} />
+          )} */}
         </div>
-
-        {/* 주간 예보 */}
-        {/* <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="font-semibold mb-2">주간 예보</h3>
-          <p className="text-gray-500">준비 중...</p>
-        </div> */}
       </div>
     </div>
   );
