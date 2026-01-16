@@ -9,7 +9,7 @@ export function Header() {
             날씨 앱
           </h1>
           <div className="flex-1 max-w-md ml-auto">
-            <SearchCity onSearch={(city) => console.log(city)} />
+            <SearchCity />
           </div>
         </div>
       </div>

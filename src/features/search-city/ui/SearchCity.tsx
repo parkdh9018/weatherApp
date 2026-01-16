@@ -1,34 +1,71 @@
-import { useState } from "react";
+// import { useCityStore } from "@/shared/model";
+import { useDistrictSearch } from "../model/useDistrictSearch";
 
-interface type {
-  onSearch: (city: string) => void;
-}
+export function SearchCity() {
+  const { query, setQuery, results, isLoading } = useDistrictSearch();
+  // const setSelectedCity = ''
 
-export function SearchCity({ onSearch }: type) {
-  const [query, setQuery] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-    }
+  const handleSelect = (district: string) => {
+    // setSelectedCity(district);
+    console.log("Selected district:", district);
+    setQuery("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 flex gap-2">
+    <div className="relative flex-1">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="도시 검색..."
-        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="지역 검색... (예: 서울, 강남, 복정동)"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-      >
-        검색
-      </button>
-    </form>
+
+      {isLoading && (
+        <div className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 p-4 text-center text-gray-500">
+          검색 데이터 로딩 중...
+        </div>
+      )}
+
+      {results.length > 0 && !isLoading && (
+        <ul className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 max-h-80 overflow-y-auto">
+          {results.map((result, index) => (
+            <li
+              key={index}
+              onClick={() => handleSelect(result.full)}
+              className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+            >
+              <div className="font-medium">
+                {result.dong ? (
+                  <>
+                    <span className="text-blue-600">{result.dong}</span>
+                    <span className="text-gray-500 text-sm ml-2">
+                      {result.district && `${result.district}, `}
+                      {result.city}
+                    </span>
+                  </>
+                ) : result.district ? (
+                  <>
+                    <span className="text-blue-600">{result.district}</span>
+                    <span className="text-gray-500 text-sm ml-2">
+                      {result.city}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-blue-600">{result.city}</span>
+                )}
+              </div>
+              <div className="text-xs text-gray-400 mt-1">{result.full}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {query.length >= 2 && results.length === 0 && !isLoading && (
+        <div className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 p-4 text-center text-gray-500">
+          검색 결과가 없습니다.
+        </div>
+      )}
+    </div>
   );
 }
