@@ -6,22 +6,26 @@ import {
 import { useCityStore } from "@/shared/model";
 
 export function WeatherDashboard() {
-  const selectedCity = useCityStore((state) => state.selectedCity);
+  const selectedAddress = useCityStore((state) => state.selectedAddress);
   const selectedCoords = useCityStore((state) => state.selectedCoords);
 
-  // 도시 이름으로 조회
+  // 주소로 조회
   const {
     data: weatherByCity,
     isLoading: loadingCity,
     error: errorCity,
-  } = useWeatherByCity(selectedCity || "");
+  } = useWeatherByCity(selectedAddress || "");
 
-  // 좌표로 조회
+  // 좌표로 조회 (카카오 주소 사용)
   const {
     data: weatherByCoords,
     isLoading: loadingCoords,
     error: errorCoords,
-  } = useWeatherByCoords(selectedCoords?.lat || 0, selectedCoords?.lon || 0);
+  } = useWeatherByCoords(
+    selectedCoords?.lat || 0,
+    selectedCoords?.lon || 0,
+    selectedAddress || ""
+  );
 
   // 좌표가 있으면 좌표 기반, 없으면 도시 기반
   const weather = selectedCoords ? weatherByCoords : weatherByCity;

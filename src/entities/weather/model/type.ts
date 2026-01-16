@@ -39,4 +39,5 @@ export interface WeatherApiResponse {
 export interface Coordinates {
   lat: number;
   lon: number;
+  address: string;
 }

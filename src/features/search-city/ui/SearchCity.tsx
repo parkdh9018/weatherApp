@@ -3,10 +3,10 @@ import { useDistrictSearch } from "../model/useDistrictSearch";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
-  const setSelectedCity = useCityStore((state) => state.setSelectedCity);
+  const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
 
   const handleSelect = (district: string) => {
-    setSelectedCity(district);
+    setSelectedAddress(district);
     console.log("Selected district:", district);
     setQuery("");
   };

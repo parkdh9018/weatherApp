@@ -3,6 +3,8 @@ import { WeatherDashboard } from "@/widgets/weatherDashboard";
 import { useEffect } from "react";
 import { useCityStore } from "@/shared/model";
 import { getCurrentLocation } from "@/features/current-location";
+import { geocodingApi } from "@/entities/weather/api/geocodingApi";
+import { formatKakaoAddress } from "@/shared/lib/formatAddress";
 
 export function MainPage() {
   const isInitialized = useCityStore((state) => state.isInitialized);
@@ -15,8 +17,23 @@ export function MainPage() {
 
     // 자동으로 현재 위치 가져오기
     getCurrentLocation()
-      .then((coords) => {
-        setSelectedCoords(coords);
+      .then(async (coords) => {
+        const addressObj = await geocodingApi.getAddressFromCoords(
+          coords.lat,
+          coords.lon
+        );
+
+        if (!addressObj) {
+          throw new Error("주소 정보를 가져올 수 없습니다.");
+        }
+
+        const address = formatKakaoAddress(
+          addressObj.region_1depth_name,
+          addressObj.region_2depth_name,
+          addressObj.region_3depth_name
+        );
+
+        setSelectedCoords(coords, address);
       })
       .catch((error) => {
         console.error("자동 위치 가져오기 실패:", error);

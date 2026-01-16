@@ -3,12 +3,16 @@ import { geocodingApi } from "../api/geocodingApi";
 import { weatherApi } from "../api/weatherApi";
 import { transformWeatherData } from "./weatherMapper";
 
-export const useWeatherByCoords = (lat: number, lon: number) => {
+export const useWeatherByCoords = (
+  lat: number,
+  lon: number,
+  customAddress: string
+) => {
   return useQuery({
     queryKey: ["weather", "coords", lat, lon],
     queryFn: async () => {
       const data = await weatherApi.getCurrentWeatherByCoords(lat, lon);
-      return transformWeatherData(data);
+      return transformWeatherData(data, customAddress);
     },
     enabled: !!(lat && lon),
     staleTime: 5 * 60 * 1000,
@@ -39,7 +43,8 @@ export const useWeatherByCity = (cityName: string) => {
         coords.lon
       );
 
-      return transformWeatherData(weatherData);
+      // coords.address를 그대로 사용
+      return transformWeatherData(weatherData, coords.address);
     },
     enabled: !!cityName && cityName.length > 0,
     staleTime: 0,
