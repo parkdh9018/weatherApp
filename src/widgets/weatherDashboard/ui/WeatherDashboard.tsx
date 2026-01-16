@@ -1,10 +1,32 @@
 import { CurrentWeather } from "@/entities/weather";
-import { useWeatherByCity } from "@/entities/weather/model/useWeather";
+import {
+  useWeatherByCity,
+  useWeatherByCoords,
+} from "@/entities/weather/model/useWeather";
 import { useCityStore } from "@/shared/model";
 
 export function WeatherDashboard() {
   const selectedCity = useCityStore((state) => state.selectedCity);
-  const { data: weather, isLoading, error } = useWeatherByCity(selectedCity);
+  const selectedCoords = useCityStore((state) => state.selectedCoords);
+
+  // 도시 이름으로 조회
+  const {
+    data: weatherByCity,
+    isLoading: loadingCity,
+    error: errorCity,
+  } = useWeatherByCity(selectedCity || "");
+
+  // 좌표로 조회
+  const {
+    data: weatherByCoords,
+    isLoading: loadingCoords,
+    error: errorCoords,
+  } = useWeatherByCoords(selectedCoords?.lat || 0, selectedCoords?.lon || 0);
+
+  // 좌표가 있으면 좌표 기반, 없으면 도시 기반
+  const weather = selectedCoords ? weatherByCoords : weatherByCity;
+  const isLoading = selectedCoords ? loadingCoords : loadingCity;
+  const error = selectedCoords ? errorCoords : errorCity;
 
   if (error) {
     return (

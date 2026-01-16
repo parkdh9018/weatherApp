@@ -1,3 +1,4 @@
+import { CurrentLocationButton } from "@/features/current-location";
 import type { WeatherData } from "../model/type";
 import { WeatherDetail } from "./WeatherDetail";
 import { WeatherIcon } from "./WeatherIcon";
@@ -25,11 +26,10 @@ export function CurrentWeather({ weather, isLoading }: CurrentWeatherProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <div>
+        <div className="flex items-center gap-4">
           <h2 className="text-3xl font-bold">{weather.city}</h2>
-          <p className="text-gray-600">{weather.country}</p>
+          <CurrentLocationButton />
         </div>
         <WeatherIcon
           icon={weather.icon}
@@ -38,7 +38,6 @@ export function CurrentWeather({ weather, isLoading }: CurrentWeatherProps) {
         />
       </div>
 
-      {/* 온도 정보 */}
       <div className="mb-4">
         <p className="text-5xl font-bold">{weather.temperature}°C</p>
         <p className="text-gray-600">체감 온도: {weather.feelsLike}°C</p>
