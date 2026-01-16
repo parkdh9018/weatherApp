@@ -10,9 +10,9 @@ export function WeatherDashboard() {
   const selectedAddress = useCityStore((state) => state.selectedAddress);
   const selectedCoords = useCityStore((state) => state.selectedCoords);
 
-  // 주소로 조회
+  // 주소로 조회 (날씨 + 예보 함께)
   const {
-    data: weatherByCity,
+    data: weatherDataByCity,
     isLoading: loadingCity,
     error: errorCity,
   } = useWeatherByCity(selectedAddress || "");
@@ -29,13 +29,17 @@ export function WeatherDashboard() {
   );
 
   // 예보 데이터 (좌표가 있을 때만)
-  const { data: forecast } = useForecastByCoords(
+  const { data: forecastByCoords } = useForecastByCoords(
     selectedCoords?.lat || 0,
     selectedCoords?.lon || 0
   );
 
   // 좌표가 있으면 좌표 기반, 없으면 도시 기반
-  const weather = selectedCoords ? weatherByCoords : weatherByCity;
+  // TODO : 구조가 보기 어려움 리팩토링 필요
+  const weather = selectedCoords ? weatherByCoords : weatherDataByCity?.weather;
+  const forecast = selectedCoords
+    ? forecastByCoords
+    : weatherDataByCity?.forecast;
   const isLoading = selectedCoords ? loadingCoords : loadingCity;
   const error = selectedCoords ? errorCoords : errorCity;
 

@@ -57,14 +57,20 @@ export const useWeatherByCity = (cityName: string) => {
       // 1단계: 좌표 가져오기
       const coords = await geocodingApi.getCoordsByAddress(cityName);
 
-      // 2단계: 날씨 가져오기
-      const weatherData = await weatherApi.getCurrentWeatherByCoords(
-        coords.lat,
-        coords.lon
-      );
+      // 2단계: 날씨와 예보 병렬로 가져오기
+      const [weatherData, forecastData] = await Promise.all([
+        weatherApi.getCurrentWeatherByCoords(coords.lat, coords.lon),
+        weatherApi.getForecastByCoords(coords.lat, coords.lon),
+      ]);
 
-      // coords.address를 그대로 사용
-      return transformWeatherData(weatherData, coords.address);
+      return {
+        weather: transformWeatherData(weatherData, coords.address),
+        forecast: {
+          minMax: getTodayMinMaxTemp(forecastData),
+          hourly: getHourlyForecast(forecastData),
+        },
+        coords: { lat: coords.lat, lon: coords.lon },
+      };
     },
     enabled: !!cityName && cityName.length > 0,
     staleTime: 0,
