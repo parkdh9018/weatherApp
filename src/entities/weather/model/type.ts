@@ -8,6 +8,43 @@ export interface WeatherData {
   windSpeed: number;
   icon: string;
   timestamp: Date;
+  tempMin?: number;
+  tempMax?: number;
+}
+
+export interface HourlyForecast {
+  time: Date;
+  temperature: number;
+  icon: string;
+  description: string;
+}
+
+export interface ForecastApiResponse {
+  list: Array<{
+    dt: number;
+    main: {
+      temp: number;
+      temp_min: number;
+      temp_max: number;
+      feels_like: number;
+      humidity: number;
+      pressure: number;
+    };
+    weather: Array<{
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    }>;
+    wind: {
+      speed: number;
+    };
+    dt_txt: string;
+  }>;
+  city: {
+    name: string;
+    country: string;
+  };
 }
 
 export interface WeatherApiResponse {

@@ -1,4 +1,9 @@
-import type { WeatherApiResponse, WeatherData } from "./type";
+import type {
+  WeatherApiResponse,
+  WeatherData,
+  ForecastApiResponse,
+  HourlyForecast,
+} from "./type";
 
 export const transformWeatherData = (
   data: WeatherApiResponse,
@@ -15,4 +20,54 @@ export const transformWeatherData = (
     icon: data.weather[0].icon,
     timestamp: new Date(),
   };
+};
+
+/**
+ * Forecast 데이터에서 당일 최저/최고 기온 추출
+ */
+export const getTodayMinMaxTemp = (
+  data: ForecastApiResponse
+): { min: number; max: number } => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const todayForecasts = data.list.filter((item) => {
+    const itemDate = new Date(item.dt * 1000);
+    return itemDate >= today && itemDate < tomorrow;
+  });
+
+  if (todayForecasts.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
+  const temps = todayForecasts.map((item) => item.main.temp);
+  return {
+    min: Math.round(Math.min(...temps)),
+    max: Math.round(Math.max(...temps)),
+  };
+};
+
+/**
+ * Forecast 데이터에서 시간대별 예보 추출 (다음 24시간)
+ */
+export const getHourlyForecast = (
+  data: ForecastApiResponse
+): HourlyForecast[] => {
+  const now = new Date();
+  const next24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+  return data.list
+    .filter((item) => {
+      const itemDate = new Date(item.dt * 1000);
+      return itemDate >= now && itemDate <= next24Hours;
+    })
+    .slice(0, 8) // 최대 8개 (24시간)
+    .map((item) => ({
+      time: new Date(item.dt * 1000),
+      temperature: Math.round(item.main.temp),
+      icon: item.weather[0].icon,
+      description: item.weather[0].description,
+    }));
 };

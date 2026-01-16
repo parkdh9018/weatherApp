@@ -1,14 +1,21 @@
 import { CurrentLocationButton } from "@/features/current-location";
-import type { WeatherData } from "../model/type";
+import type { WeatherData, HourlyForecast } from "../model/type";
 import { WeatherDetail } from "./WeatherDetail";
 import { WeatherIcon } from "./WeatherIcon";
 
 interface CurrentWeatherProps {
   weather: WeatherData;
   isLoading?: boolean;
+  minMaxTemp?: { min: number; max: number };
+  hourlyForecast?: HourlyForecast[];
 }
 
-export function CurrentWeather({ weather, isLoading }: CurrentWeatherProps) {
+export function CurrentWeather({
+  weather,
+  isLoading,
+  minMaxTemp,
+  hourlyForecast,
+}: CurrentWeatherProps) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -41,10 +48,47 @@ export function CurrentWeather({ weather, isLoading }: CurrentWeatherProps) {
       <div className="mb-4">
         <p className="text-5xl font-bold">{weather.temperature}°C</p>
         <p className="text-gray-600">체감 온도: {weather.feelsLike}°C</p>
+
+        {/* 당일 최저/최고 기온 */}
+        {minMaxTemp && (
+          <p className="text-gray-600 mt-1">
+            최저 {minMaxTemp.min}°C / 최고 {minMaxTemp.max}°C
+          </p>
+        )}
+
         <p className="text-lg text-gray-700 mt-2 capitalize">
           {weather.description}
         </p>
       </div>
+
+      {/* 시간대별 예보 */}
+      {hourlyForecast && hourlyForecast.length > 0 && (
+        <div className="mb-4 pb-4 border-b">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">
+            시간대별 예보
+          </h3>
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {hourlyForecast.map((forecast, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center min-w-[60px] text-center"
+              >
+                <p className="text-xs text-gray-600">
+                  {forecast.time.getHours()}시
+                </p>
+                <WeatherIcon
+                  icon={forecast.icon}
+                  description={forecast.description}
+                  size="sm"
+                />
+                <p className="text-sm font-semibold">
+                  {forecast.temperature}°C
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 상세 정보 */}
       <div className="grid grid-cols-2 gap-4 pt-4 border-t">

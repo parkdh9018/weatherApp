@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { geocodingApi } from "../api/geocodingApi";
 import { weatherApi } from "../api/weatherApi";
-import { transformWeatherData } from "./weatherMapper";
+import {
+  transformWeatherData,
+  getTodayMinMaxTemp,
+  getHourlyForecast,
+} from "./weatherMapper";
 
 export const useWeatherByCoords = (
   lat: number,
@@ -16,6 +20,22 @@ export const useWeatherByCoords = (
     },
     enabled: !!(lat && lon),
     staleTime: 5 * 60 * 1000,
+    retry: 2,
+  });
+};
+
+export const useForecastByCoords = (lat: number, lon: number) => {
+  return useQuery({
+    queryKey: ["forecast", "coords", lat, lon],
+    queryFn: async () => {
+      const data = await weatherApi.getForecastByCoords(lat, lon);
+      return {
+        minMax: getTodayMinMaxTemp(data),
+        hourly: getHourlyForecast(data),
+      };
+    },
+    enabled: !!(lat && lon),
+    staleTime: 30 * 60 * 1000, // 30분
     retry: 2,
   });
 };

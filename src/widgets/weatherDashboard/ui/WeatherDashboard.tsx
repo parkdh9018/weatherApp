@@ -2,6 +2,7 @@ import { CurrentWeather } from "@/entities/weather";
 import {
   useWeatherByCity,
   useWeatherByCoords,
+  useForecastByCoords,
 } from "@/entities/weather/model/useWeather";
 import { useCityStore } from "@/shared/model";
 
@@ -27,6 +28,12 @@ export function WeatherDashboard() {
     selectedAddress || ""
   );
 
+  // 예보 데이터 (좌표가 있을 때만)
+  const { data: forecast } = useForecastByCoords(
+    selectedCoords?.lat || 0,
+    selectedCoords?.lon || 0
+  );
+
   // 좌표가 있으면 좌표 기반, 없으면 도시 기반
   const weather = selectedCoords ? weatherByCoords : weatherByCity;
   const isLoading = selectedCoords ? loadingCoords : loadingCity;
@@ -45,7 +52,12 @@ export function WeatherDashboard() {
       <div className="flex flex-col gap-4 p-4">
         <div className="space-y-6">
           {weather && (
-            <CurrentWeather weather={weather} isLoading={isLoading} />
+            <CurrentWeather
+              weather={weather}
+              isLoading={isLoading}
+              minMaxTemp={forecast?.minMax}
+              hourlyForecast={forecast?.hourly}
+            />
           )}
         </div>
       </div>
