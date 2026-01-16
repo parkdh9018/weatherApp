@@ -1,8 +1,10 @@
 import { CurrentWeather } from "@/entities/weather";
 import { useWeatherByCity } from "@/entities/weather/model/useWeather";
+import { useCityStore } from "@/shared/model";
 
 export function WeatherDashboard() {
-  const { data: weather, isLoading, error } = useWeatherByCity("복정동");
+  const selectedCity = useCityStore((state) => state.selectedCity);
+  const { data: weather, isLoading, error } = useWeatherByCity(selectedCity);
 
   if (error) {
     return (

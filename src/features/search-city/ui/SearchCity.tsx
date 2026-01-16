@@ -1,12 +1,12 @@
-// import { useCityStore } from "@/shared/model";
+import { useCityStore } from "@/shared/model";
 import { useDistrictSearch } from "../model/useDistrictSearch";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
-  // const setSelectedCity = ''
+  const setSelectedCity = useCityStore((state) => state.setSelectedCity);
 
   const handleSelect = (district: string) => {
-    // setSelectedCity(district);
+    setSelectedCity(district);
     console.log("Selected district:", district);
     setQuery("");
   };
