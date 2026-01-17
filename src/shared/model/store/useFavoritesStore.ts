@@ -7,12 +7,14 @@ export interface FavoriteCity {
     lat: number;
     lon: number;
   };
+  nickname?: string;
 }
 
 interface FavoritesState {
   favorites: FavoriteCity[];
   addFavorite: (city: FavoriteCity) => void;
   removeFavorite: (address: string) => void;
+  updateNickname: (address: string, nickname: string) => void;
   isFavorite: (address: string) => boolean;
   toggleFavorite: (city: FavoriteCity) => void;
 }
@@ -35,6 +37,14 @@ export const useFavoritesStore = create<FavoritesState>()(
       removeFavorite: (address) => {
         set((state) => ({
           favorites: state.favorites.filter((fav) => fav.address !== address),
+        }));
+      },
+
+      updateNickname: (address, nickname) => {
+        set((state) => ({
+          favorites: state.favorites.map((fav) =>
+            fav.address === address ? { ...fav, nickname } : fav
+          ),
         }));
       },
 
