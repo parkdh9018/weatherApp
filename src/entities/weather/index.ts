@@ -2,6 +2,7 @@
 export { CurrentWeather } from "./ui/CurrentWeather";
 export { WeatherIcon } from "./ui/WeatherIcon";
 export { WeatherDetail } from "./ui/WeatherDetail";
+export { WeatherSummary } from "./ui/WeatherSummary";
 
 // Hooks
 export { useWeatherByCity, useWeatherByCoords } from "./model/useWeather";
