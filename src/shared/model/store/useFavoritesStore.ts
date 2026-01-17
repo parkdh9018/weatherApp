@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export const MAX_FAVORITES = 6;
+
 export interface FavoriteCity {
   address: string;
   coords: {
@@ -28,6 +30,10 @@ export const useFavoritesStore = create<FavoritesState>()(
         set((state) => {
           // 중복 체크
           if (state.favorites.some((fav) => fav.address === city.address)) {
+            return state;
+          }
+          // 최대 갯수 체크
+          if (state.favorites.length >= MAX_FAVORITES) {
             return state;
           }
           return { favorites: [...state.favorites, city] };
