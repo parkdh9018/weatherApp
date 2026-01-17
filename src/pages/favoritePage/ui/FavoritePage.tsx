@@ -1,4 +1,5 @@
 import { Header } from "@/widgets/header";
+import { Navigation } from "@/widgets/navigation";
 import { useFavoritesStore, useCityStore } from "@/shared/model";
 import { useNavigate } from "react-router-dom";
 import { FavoriteCityItem } from "@/entities/favorite-city";
@@ -19,6 +20,7 @@ export function FavoritePage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
+      <Navigation />
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4">즐겨찾기</h2>

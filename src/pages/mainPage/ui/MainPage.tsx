@@ -1,4 +1,5 @@
 import { Header } from "@/widgets/header";
+import { Navigation } from "@/widgets/navigation";
 import { WeatherDashboard } from "@/widgets/weatherDashboard";
 import { useEffect } from "react";
 import { useCityStore } from "@/shared/model";
@@ -45,6 +46,7 @@ export function MainPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
+      <Navigation />
       <WeatherDashboard />
     </div>
   );
