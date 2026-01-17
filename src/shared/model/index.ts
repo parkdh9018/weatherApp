@@ -1,1 +1,1 @@
-export { useCityStore, type CityStore } from "./store";
+export { useCityStore, useFavoritesStore, type CityStore, type FavoriteCity } from "./store";

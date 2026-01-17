@@ -1,4 +1,5 @@
 import { CurrentLocationButton } from "@/features/current-location";
+import { FavoriteButton } from "@/features/toggle-favorite";
 import type { WeatherData, HourlyForecast } from "../model/type";
 import { WeatherDetail } from "./WeatherDetail";
 import { WeatherIcon } from "./WeatherIcon";
@@ -8,6 +9,7 @@ interface CurrentWeatherProps {
   isLoading?: boolean;
   minMaxTemp?: { min: number; max: number };
   hourlyForecast?: HourlyForecast[];
+  coords?: { lat: number; lon: number };
 }
 
 export function CurrentWeather({
@@ -15,6 +17,7 @@ export function CurrentWeather({
   isLoading,
   minMaxTemp,
   hourlyForecast,
+  coords,
 }: CurrentWeatherProps) {
   if (isLoading) {
     return (
@@ -35,6 +38,10 @@ export function CurrentWeather({
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
+          {/* 즐겨찾기 버튼 */}
+          {coords && weather.city && (
+            <FavoriteButton address={weather.city} coords={coords} />
+          )}
           <h2 className="text-3xl font-bold">{weather.city}</h2>
           <CurrentLocationButton />
         </div>

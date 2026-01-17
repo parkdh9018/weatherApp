@@ -1,16 +1,45 @@
 import { Header } from "@/widgets/header";
+import { useFavoritesStore, useCityStore } from "@/shared/model";
+import { useNavigate } from "react-router-dom";
+import { FavoriteCityItem } from "@/entities/favorite-city";
 
 export function FavoritePage() {
+  const { favorites, removeFavorite } = useFavoritesStore();
+  const setSelectedCoords = useCityStore((state) => state.setSelectedCoords);
+  const navigate = useNavigate();
+
+  const handleCityClick = (
+    address: string,
+    coords: { lat: number; lon: number }
+  ) => {
+    setSelectedCoords(coords, address);
+    navigate("/weather");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4">즐겨찾기</h2>
-          <p className="text-gray-600">
-            즐겨찾는 지역을 추가하고 관리할 수 있습니다.
-          </p>
-          {/* 즐겨찾기 기능은 추후 구현 */}
+
+          {favorites.length === 0 ? (
+            <p className="text-gray-600">
+              즐겨찾는 지역을 추가해보세요. 날씨 페이지에서 하트 버튼을 클릭하면
+              추가됩니다.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {favorites.map((city) => (
+                <FavoriteCityItem
+                  key={city.address}
+                  city={city}
+                  onCityClick={handleCityClick}
+                  onRemove={removeFavorite}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

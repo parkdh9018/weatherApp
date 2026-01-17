@@ -61,6 +61,7 @@ export function WeatherDashboard() {
               isLoading={isLoading}
               minMaxTemp={forecast?.minMax}
               hourlyForecast={forecast?.hourly}
+              coords={selectedCoords || weatherDataByCity?.coords}
             />
           )}
         </div>
