@@ -1,12 +1,7 @@
-import { MainPage } from "@/pages/mainPage";
 import { Providers } from "./providers";
 
 function App() {
-  return (
-    <Providers>
-      <MainPage />
-    </Providers>
-  );
+  return <Providers />;
 }
 
 export default App;
