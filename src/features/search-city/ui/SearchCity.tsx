@@ -1,14 +1,22 @@
 import { useCityStore } from "@/shared/model";
 import { useDistrictSearch } from "../model/useDistrictSearch";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
   const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSelect = (district: string) => {
     setSelectedAddress(district);
     console.log("Selected district:", district);
     setQuery("");
+
+    // 현재 즐겨찾기 페이지에 있으면 날씨 페이지로 이동
+    if (location.pathname === "/favorite") {
+      navigate("/weather");
+    }
   };
 
   return (
