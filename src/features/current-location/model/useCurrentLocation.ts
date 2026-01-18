@@ -5,6 +5,7 @@ import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { formatKakaoAddress } from "@/shared/lib/formatAddress";
 
 export const useCurrentLocation = () => {
+  const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
   const setSelectedCoords = useCityStore((state) => state.setSelectedCoords);
 
   return useMutation({
@@ -12,7 +13,7 @@ export const useCurrentLocation = () => {
       const coords = await getCurrentLocation();
       const addressObj = await geocodingApi.getAddressFromCoords(
         coords.lat,
-        coords.lon
+        coords.lon,
       );
 
       if (!addressObj) {
@@ -22,12 +23,13 @@ export const useCurrentLocation = () => {
       const address = formatKakaoAddress(
         addressObj.region_1depth_name,
         addressObj.region_2depth_name,
-        addressObj.region_3depth_name
+        addressObj.region_3depth_name,
       );
       return { ...coords, address };
     },
     onSuccess: ({ lat, lon, address }) => {
-      setSelectedCoords({ lat, lon }, address);
+      setSelectedAddress(address);
+      setSelectedCoords({ lat, lon });
     },
   });
 };

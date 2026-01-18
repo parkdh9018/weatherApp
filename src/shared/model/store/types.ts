@@ -1,11 +1,12 @@
 export interface CityStore {
-  selectedAddress: string | null;
-  selectedCoords: { lat: number; lon: number } | null;
+  selectedAddress: string;
+  selectedCoords: { lat: number; lon: number };
   isInitialized: boolean;
   setSelectedAddress: (address: string) => void;
-  setSelectedCoords: (
+  setSelectedCoords: (coords: { lat: number; lon: number }) => void;
+  setLocationData: (
+    address: string,
     coords: { lat: number; lon: number },
-    address?: string
   ) => void;
   setInitialized: () => void;
 }

@@ -6,14 +6,16 @@ import { FavoriteCityItem } from "@/entities/favorite-city";
 
 export function FavoritePage() {
   const { favorites, removeFavorite } = useFavoritesStore();
+  const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
   const setSelectedCoords = useCityStore((state) => state.setSelectedCoords);
   const navigate = useNavigate();
 
   const handleCityClick = (
     address: string,
-    coords: { lat: number; lon: number }
+    coords: { lat: number; lon: number },
   ) => {
-    setSelectedCoords(coords, address);
+    setSelectedAddress(address);
+    setSelectedCoords(coords);
     navigate("/weather");
   };
 

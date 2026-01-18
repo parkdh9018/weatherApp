@@ -1,21 +1,33 @@
 import { useCityStore } from "@/shared/model";
 import { useDistrictSearch } from "../model/useDistrictSearch";
 import { useLocation, useNavigate } from "react-router-dom";
+import { geocodingApi } from "@/entities/weather/api/geocodingApi";
+import { useState } from "react";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
-  const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
+  const setLocationData = useCityStore((state) => state.setLocationData);
   const location = useLocation();
   const navigate = useNavigate();
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
-  const handleSelect = (district: string) => {
-    setSelectedAddress(district);
-    console.log("Selected district:", district);
-    setQuery("");
+  const handleSelect = async (district: string) => {
+    try {
+      setIsGeocoding(true);
+      const coords = await geocodingApi.getCoordsByAddress(district);
+      setLocationData(district, { lat: coords.lat, lon: coords.lon });
+      setQuery("");
 
-    // 현재 즐겨찾기 페이지에 있으면 날씨 페이지로 이동
-    if (location.pathname === "/favorite") {
-      navigate("/weather");
+      // 현재 즐겨찾기 페이지에 있으면 날씨 페이지로 이동
+      if (location.pathname === "/favorite") {
+        navigate("/weather");
+      }
+    } catch (error) {
+      console.error("Failed to geocode address:", error);
+      // 에러 발생 시에도 주소는 저장 (fallback)
+      setLocationData(district, { lat: 0, lon: 0 });
+    } finally {
+      setIsGeocoding(false);
     }
   };
 
@@ -29,9 +41,9 @@ export function SearchCity() {
         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      {isLoading && (
+      {(isLoading || isGeocoding) && (
         <div className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 p-4 text-center text-gray-500">
-          검색 데이터 로딩 중...
+          {isGeocoding ? "위치 정보 확인 중..." : "검색 데이터 로딩 중..."}
         </div>
       )}
 

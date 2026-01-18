@@ -1,6 +1,5 @@
 import { CurrentWeather } from "@/entities/weather";
 import {
-  useWeatherByCity,
   useWeatherByCoords,
   useForecastByCoords,
 } from "@/entities/weather/model/useWeather";
@@ -10,38 +9,22 @@ export function WeatherDashboard() {
   const selectedAddress = useCityStore((state) => state.selectedAddress);
   const selectedCoords = useCityStore((state) => state.selectedCoords);
 
-  // 주소로 조회 (날씨 + 예보 함께)
+  // 현재 날씨 데이터
   const {
-    data: weatherDataByCity,
-    isLoading: loadingCity,
-    error: errorCity,
-  } = useWeatherByCity(selectedAddress || "");
-
-  // 좌표로 조회 (카카오 주소 사용)
-  const {
-    data: weatherByCoords,
-    isLoading: loadingCoords,
-    error: errorCoords,
+    data: weather,
+    isLoading,
+    error,
   } = useWeatherByCoords(
-    selectedCoords?.lat || 0,
-    selectedCoords?.lon || 0,
-    selectedAddress || ""
+    selectedCoords.lat,
+    selectedCoords.lon,
+    selectedAddress,
   );
 
-  // 예보 데이터 (좌표가 있을 때만)
-  const { data: forecastByCoords } = useForecastByCoords(
-    selectedCoords?.lat || 0,
-    selectedCoords?.lon || 0
+  // 예보 데이터
+  const { data: forecast } = useForecastByCoords(
+    selectedCoords.lat,
+    selectedCoords.lon,
   );
-
-  // 좌표가 있으면 좌표 기반, 없으면 도시 기반
-  // TODO : 구조가 보기 어려움 리팩토링 필요
-  const weather = selectedCoords ? weatherByCoords : weatherDataByCity?.weather;
-  const forecast = selectedCoords
-    ? forecastByCoords
-    : weatherDataByCity?.forecast;
-  const isLoading = selectedCoords ? loadingCoords : loadingCity;
-  const error = selectedCoords ? errorCoords : errorCity;
 
   if (error) {
     return (
@@ -55,13 +38,13 @@ export function WeatherDashboard() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 p-4">
         <div className="space-y-6">
-          {weather && (
+          {weather && selectedCoords && (
             <CurrentWeather
               weather={weather}
               isLoading={isLoading}
               minMaxTemp={forecast?.minMax}
               hourlyForecast={forecast?.hourly}
-              coords={selectedCoords || weatherDataByCity?.coords}
+              coords={selectedCoords}
             />
           )}
         </div>

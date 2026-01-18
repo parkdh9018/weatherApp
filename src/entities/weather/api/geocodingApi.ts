@@ -8,8 +8,8 @@ export const geocodingApi = {
         if (status === kakao.maps.services.Status.OK) {
           console.log("Geocoding result:", result);
           resolve({
-            lat: Number(result[0].y),
-            lon: Number(result[0].x),
+            lat: Math.round(Number(result[0].y) * 1000) / 1000,
+            lon: Math.round(Number(result[0].x) * 1000) / 1000,
             address: result[0].address_name,
           });
         } else {
