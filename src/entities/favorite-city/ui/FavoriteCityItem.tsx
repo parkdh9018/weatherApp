@@ -32,7 +32,7 @@ export function FavoriteCityItem({
             />
           ) : (
             <>
-              <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800">
+              <h3 className="text-lg font-semibold text-gray-600 hover:text-blue-800">
                 {city.nickname || formatAddressDisplay(city.address)}
               </h3>
               {city.nickname && (

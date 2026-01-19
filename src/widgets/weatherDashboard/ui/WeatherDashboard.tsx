@@ -45,6 +45,7 @@ export function WeatherDashboard() {
               todayMinMax={forecast?.today}
               tomorrowMinMax={forecast?.tomorrow}
               coords={selectedCoords}
+              tomorrowForecasts={forecast?.tomorrowMorningAfternoon}
             />
             {forecast?.hourly && <HourlyForecast forecasts={forecast.hourly} />}
           </>

@@ -6,6 +6,7 @@ import {
   getTodayMinMaxTemp,
   getTomorrowMinMaxTemp,
   getHourlyForecast,
+  getTomorrowMorningAfternoon,
 } from "./weatherMapper";
 
 export const useWeatherByCoords = (
@@ -34,6 +35,7 @@ export const useForecastByCoords = (lat: number, lon: number) => {
         today: getTodayMinMaxTemp(data),
         tomorrow: getTomorrowMinMaxTemp(data),
         hourly: getHourlyForecast(data),
+        tomorrowMorningAfternoon: getTomorrowMorningAfternoon(data),
       };
     },
     enabled: !!(lat && lon),

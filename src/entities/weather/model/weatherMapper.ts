@@ -98,14 +98,64 @@ export const getHourlyForecast = (
 
   return data.list
     .filter((item) => {
-      const itemDate = new Date(item.dt * 1000);
-      return itemDate >= now && itemDate <= next24Hours;
+      const itemTime = new Date(item.dt * 1000);
+      return itemTime >= now && itemTime <= next24Hours;
     })
-    .slice(0, 8) // 최대 8개 (24시간)
+    .slice(0, 8)
     .map((item) => ({
       time: new Date(item.dt * 1000),
-      temperature: Math.round(item.main.temp),
+      temperature: Math.round(item.main.temp * 10) / 10,
       icon: item.weather[0].icon,
       description: item.weather[0].description,
     }));
+};
+
+/**
+ * 내일의 오전(9시), 오후(15시) 날씨 추출
+ */
+export const getTomorrowMorningAfternoon = (
+  data: ForecastApiResponse,
+): HourlyForecast[] => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowDateString = tomorrow.toISOString().split("T")[0];
+
+  const tomorrowForecasts = data.list.filter((item) => {
+    const itemDate = new Date(item.dt * 1000);
+    const itemDateString = itemDate.toISOString().split("T")[0];
+    return itemDateString === tomorrowDateString;
+  });
+
+  // 오전 9시, 오후 3시 데이터 찾기
+  const morning = tomorrowForecasts.find((item) => {
+    const hour = new Date(item.dt * 1000).getHours();
+    return hour === 9;
+  });
+
+  const afternoon = tomorrowForecasts.find((item) => {
+    const hour = new Date(item.dt * 1000).getHours();
+    return hour === 15;
+  });
+
+  const result: HourlyForecast[] = [];
+
+  if (morning) {
+    result.push({
+      time: new Date(morning.dt * 1000),
+      temperature: Math.round(morning.main.temp * 10) / 10,
+      icon: morning.weather[0].icon,
+      description: morning.weather[0].description,
+    });
+  }
+
+  if (afternoon) {
+    result.push({
+      time: new Date(afternoon.dt * 1000),
+      temperature: Math.round(afternoon.main.temp * 10) / 10,
+      icon: afternoon.weather[0].icon,
+      description: afternoon.weather[0].description,
+    });
+  }
+
+  return result;
 };

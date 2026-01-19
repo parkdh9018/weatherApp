@@ -4,6 +4,7 @@ import type { WeatherData } from "../model/type";
 import { WeatherIcon } from "./WeatherIcon";
 import { InfoCard } from "./InfoCard";
 import { formatAddressDisplay } from "@/shared/lib/formatAddress";
+import { TomorrowWeather } from "./TomorrowWeather";
 
 interface CurrentWeatherProps {
   weather: WeatherData;
@@ -11,6 +12,12 @@ interface CurrentWeatherProps {
   todayMinMax?: { min: number; max: number };
   tomorrowMinMax?: { min: number; max: number };
   coords: { lat: number; lon: number };
+  tomorrowForecasts?: Array<{
+    time: Date;
+    temperature: number;
+    icon: string;
+    description: string;
+  }>;
 }
 
 export function CurrentWeather({
@@ -19,6 +26,7 @@ export function CurrentWeather({
   todayMinMax,
   tomorrowMinMax,
   coords,
+  tomorrowForecasts,
 }: CurrentWeatherProps) {
   if (isLoading) {
     return (
@@ -56,57 +64,55 @@ export function CurrentWeather({
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl mb-4">
-        {/* 메인 온도 섹션 */}
-        <div className="px-4 py-6">
-          <div className="flex items-start justify-between">
-            {/* 왼쪽: 현재 온도 */}
-            <div>
-              <div className="flex items-start">
-                <WeatherIcon
-                  icon={weather.icon}
-                  description={weather.description}
-                  size="lg"
-                />
-                <span className="text-6xl font-light ml-2">
-                  {Math.round(weather.temperature)}°
+      {/* 오늘/내일 날씨 카드 */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        {/* 현재(오늘) 날씨 */}
+        <div className="bg-white rounded-2xl p-4">
+          <div className="text-sm text-gray-500 mb-3">
+            현재{" "}
+            {new Date().toLocaleDateString("ko-KR", {
+              month: "2-digit",
+              day: "2-digit",
+            })}
+          </div>
+          <div className="flex items-start mb-3">
+            <WeatherIcon
+              icon={weather.icon}
+              description={weather.description}
+              size="md"
+            />
+            <span className="text-5xl font-light ml-1">
+              {Math.round(weather.temperature)}°
+            </span>
+          </div>
+          <div className="text-sm text-gray-600">
+            <p className="mb-1">{weather.description}</p>
+            {todayMinMax && (
+              <p className="text-xs">
+                최저
+                <span className="font-medium font-semibold">
+                  {Math.round(todayMinMax.min)}°
+                </span>{" "}
+                최고
+                <span className="font-medium font-semibold">
+                  {Math.round(todayMinMax.max)}°
                 </span>
-              </div>
-              <div className="mt-2 text-sm text-gray-600 space-y-1">
-                <p>
-                  체감{" "}
-                  <span className="font-medium">
-                    {Math.round(weather.feelsLike)}°
-                  </span>
-                </p>
-                {todayMinMax && (
-                  <p>
-                    최저{Math.round(todayMinMax.min)}° 최고
-                    {Math.round(todayMinMax.max)}°
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* 오른쪽: 내일 최저/최고 기온 */}
-            {tomorrowMinMax && (
-              <div className="text-right">
-                <div className="text-sm text-gray-500">내일</div>
-                <div className="mt-1">
-                  <span className="text-2xl font-medium text-red-500">
-                    {Math.round(tomorrowMinMax.max)}°
-                  </span>
-                  <span className="text-gray-400 mx-1">/</span>
-                  <span className="text-2xl font-medium text-blue-500">
-                    {Math.round(tomorrowMinMax.min)}°
-                  </span>
-                </div>
-              </div>
+              </p>
             )}
           </div>
         </div>
 
-        {/* 정보 카드 그리드 */}
+        {/* 내일 날씨 */}
+        {tomorrowMinMax && (
+          <TomorrowWeather
+            tomorrowMinMax={tomorrowMinMax}
+            tomorrowForecasts={tomorrowForecasts}
+          />
+        )}
+      </div>
+
+      {/* 정보 카드 그리드 */}
+      <div className="bg-white rounded-2xl mb-4 py-4">
         <div className="px-4 pb-4">
           <div className="grid grid-cols-3 gap-2">
             <InfoCard label="습도">
