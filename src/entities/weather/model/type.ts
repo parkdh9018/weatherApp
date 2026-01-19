@@ -6,6 +6,7 @@ export interface WeatherData {
   description: string;
   humidity: number;
   windSpeed: number;
+  pressure: number;
   icon: string;
   timestamp: Date;
   tempMin?: number;

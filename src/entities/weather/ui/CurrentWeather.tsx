@@ -114,7 +114,7 @@ export function CurrentWeather({
       {/* 정보 카드 그리드 */}
       <div className="bg-white rounded-2xl mb-4 py-4">
         <div className="px-4 pb-4">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <InfoCard label="습도">
               <div className="text-2xl font-bold">{weather.humidity}%</div>
             </InfoCard>
@@ -126,9 +126,17 @@ export function CurrentWeather({
               </div>
             </InfoCard>
 
-            <InfoCard label="날씨">
-              <div className="text-sm font-medium capitalize">
-                {weather.description}
+            <InfoCard label="체감온도">
+              <div className="text-2xl font-bold">
+                {Math.round(weather.feelsLike)}
+                <span className="text-sm font-normal">°</span>
+              </div>
+            </InfoCard>
+
+            <InfoCard label="기압">
+              <div className="text-2xl font-bold">
+                {weather.pressure}
+                <span className="text-sm font-normal">hPa</span>
               </div>
             </InfoCard>
           </div>
@@ -136,27 +144,6 @@ export function CurrentWeather({
         {/* 업데이트 시간 */}
         <div className="px-4 py-2 text-xs text-gray-500 text-right">
           업데이트 {currentTime}
-        </div>
-      </div>
-
-      {/* 상세 정보 */}
-      <div className="bg-white px-4 py-3 rounded-2xl mb-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">상세 정보</h2>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center py-1.5 border-b">
-            <span className="text-sm text-gray-600">습도</span>
-            <span className="text-sm font-medium">{weather.humidity}%</span>
-          </div>
-          <div className="flex justify-between items-center py-1.5 border-b">
-            <span className="text-sm text-gray-600">풍속</span>
-            <span className="text-sm font-medium">{weather.windSpeed}m/s</span>
-          </div>
-          <div className="flex justify-between items-center py-1.5">
-            <span className="text-sm text-gray-600">체감온도</span>
-            <span className="text-sm font-medium">
-              {Math.round(weather.feelsLike)}°C
-            </span>
-          </div>
         </div>
       </div>
     </div>

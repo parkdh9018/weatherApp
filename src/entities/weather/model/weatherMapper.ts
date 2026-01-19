@@ -17,6 +17,7 @@ export const transformWeatherData = (
     description: data.weather[0].description,
     humidity: data.main.humidity,
     windSpeed: Math.round(data.wind.speed * 10) / 10,
+    pressure: data.main.pressure,
     icon: data.weather[0].icon,
     timestamp: new Date(),
   };
