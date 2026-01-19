@@ -1,7 +1,7 @@
 import { useCurrentLocation } from "../model/useCurrentLocation";
 
 export function CurrentLocationButton() {
-  const { mutate, isPending, error } = useCurrentLocation();
+  const { mutate, isPending } = useCurrentLocation();
 
   return (
     <div>
@@ -22,7 +22,6 @@ export function CurrentLocationButton() {
           </>
         )}
       </button>
-      {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import type { CityStore } from "./types";
 
 export const useCityStore = create<CityStore>((set) => ({
   selectedAddress: "서울특별시",
-  selectedCoords: { lat: 0, lon: 0 },
+  selectedCoords: { lat: 37.55, lon: 126.99 },
   isInitialized: false,
 
   setSelectedAddress: (address: string) =>

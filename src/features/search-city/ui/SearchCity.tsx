@@ -3,6 +3,7 @@ import { useDistrictSearch } from "../model/useDistrictSearch";
 import { useLocation, useNavigate } from "react-router-dom";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
@@ -24,8 +25,7 @@ export function SearchCity() {
       }
     } catch (error) {
       console.error("Failed to geocode address:", error);
-      // 에러 발생 시에도 주소는 저장 (fallback)
-      setLocationData(district, { lat: 0, lon: 0 });
+      toast.error("주소를 좌표로 변환하는데 실패했습니다.");
     } finally {
       setIsGeocoding(false);
     }

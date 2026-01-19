@@ -3,6 +3,7 @@ import { useCityStore } from "@/shared/model";
 import { getCurrentLocation } from "../lib/getCurrentLocation";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { formatKakaoAddress } from "@/shared/lib/formatAddress";
+import { toast } from "react-toastify";
 
 export const useCurrentLocation = () => {
   const setSelectedAddress = useCityStore((state) => state.setSelectedAddress);
@@ -30,6 +31,9 @@ export const useCurrentLocation = () => {
     onSuccess: ({ lat, lon, address }) => {
       setSelectedAddress(address);
       setSelectedCoords({ lat, lon });
+    },
+    onError: () => {
+      toast.error("현재 위치를 가져올 수 없습니다.");
     },
   });
 };

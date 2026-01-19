@@ -3,6 +3,7 @@ import { useCityStore } from "@/shared/model";
 import { getCurrentLocation } from "@/features/current-location";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { formatKakaoAddress } from "@/shared/lib/formatAddress";
+import { toast } from "react-toastify";
 
 export function useInitialLocation() {
   const isInitialized = useCityStore((state) => state.isInitialized);
@@ -35,8 +36,12 @@ export function useInitialLocation() {
       })
       .catch((error) => {
         console.error("자동 위치 가져오기 실패:", error);
+        toast.error(
+          "위치 정보를 가져올 수 없어 기본 위치(서울)로 설정되었습니다.",
+        );
         // 실패해도 초기화 플래그 설정 (무한 재시도 방지)
         setInitialized();
+        setLocationData("서울특별시", { lat: 37.55, lon: 126.99 });
       });
   }, [isInitialized, setLocationData, setInitialized]);
 }
