@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { formatAddressDisplay } from "@/shared/lib/formatAddress";
 
 export function SearchCity() {
   const { query, setQuery, results, isLoading } = useDistrictSearch();
@@ -75,7 +76,9 @@ export function SearchCity() {
                   <span className="text-blue-600">{result.city}</span>
                 )}
               </div>
-              <div className="text-xs text-gray-400 mt-1">{result.full}</div>
+              <div className="text-xs text-gray-400 mt-1">
+                {formatAddressDisplay(result.full)}
+              </div>
             </li>
           ))}
         </ul>

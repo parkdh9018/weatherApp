@@ -3,6 +3,7 @@ import { FavoriteButton } from "@/features/toggle-favorite";
 import type { WeatherData } from "../model/type";
 import { WeatherIcon } from "./WeatherIcon";
 import { InfoCard } from "./InfoCard";
+import { formatAddressDisplay } from "@/shared/lib/formatAddress";
 
 interface CurrentWeatherProps {
   weather: WeatherData;
@@ -48,7 +49,9 @@ export function CurrentWeather({
           {coords && weather.city && (
             <FavoriteButton address={weather.city} coords={coords} />
           )}
-          <h1 className="text-lg font-bold">{weather.city}</h1>
+          <h1 className="text-lg font-bold">
+            {formatAddressDisplay(weather.city)}
+          </h1>
           <CurrentLocationButton />
         </div>
       </div>
