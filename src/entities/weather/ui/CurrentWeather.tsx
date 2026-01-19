@@ -1,5 +1,6 @@
 import { CurrentLocationButton } from "@/features/current-location";
 import { FavoriteButton } from "@/features/toggle-favorite";
+import { RefreshButton } from "@/features/refresh-weather";
 import type { WeatherData } from "../model/type";
 import { WeatherIcon } from "./WeatherIcon";
 import { InfoCard } from "./InfoCard";
@@ -18,6 +19,7 @@ interface CurrentWeatherProps {
     icon: string;
     description: string;
   }>;
+  onRefresh?: () => Promise<void>;
 }
 
 export function CurrentWeather({
@@ -27,6 +29,7 @@ export function CurrentWeather({
   tomorrowMinMax,
   coords,
   tomorrowForecasts,
+  onRefresh,
 }: CurrentWeatherProps) {
   if (isLoading) {
     return (
@@ -142,8 +145,9 @@ export function CurrentWeather({
           </div>
         </div>
         {/* 업데이트 시간 */}
-        <div className="px-4 py-2 text-xs text-gray-500 text-right">
-          업데이트 {currentTime}
+        <div className="px-4 py-2 flex items-center justify-end gap-2 text-xs text-gray-500">
+          <span>업데이트 {currentTime}</span>
+          {onRefresh && <RefreshButton onRefresh={onRefresh} />}
         </div>
       </div>
     </div>

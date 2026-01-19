@@ -21,7 +21,9 @@ export const useWeatherByCoords = (
       return transformWeatherData(data, customAddress);
     },
     enabled: !!(lat && lon),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5분
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: 2,
   });
 };
@@ -40,6 +42,8 @@ export const useForecastByCoords = (lat: number, lon: number) => {
     },
     enabled: !!(lat && lon),
     staleTime: 30 * 60 * 1000, // 30분
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: 2,
   });
 };
@@ -67,7 +71,9 @@ export const useWeatherByCity = (cityName: string) => {
       };
     },
     enabled: !!cityName && cityName.length > 0,
-    staleTime: 0,
+    staleTime: 5 * 60 * 1000, // 5분
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: 2,
   });
 };

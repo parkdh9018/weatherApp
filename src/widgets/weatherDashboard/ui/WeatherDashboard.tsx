@@ -14,6 +14,7 @@ export function WeatherDashboard() {
     data: weather,
     isLoading,
     error,
+    refetch: refetchWeather,
   } = useWeatherByCoords(
     selectedCoords.lat,
     selectedCoords.lon,
@@ -21,10 +22,15 @@ export function WeatherDashboard() {
   );
 
   // 예보 데이터
-  const { data: forecast } = useForecastByCoords(
+  const { data: forecast, refetch: refetchForecast } = useForecastByCoords(
     selectedCoords.lat,
     selectedCoords.lon,
   );
+
+  // 새로고침 핸들러
+  const handleRefresh = async () => {
+    await Promise.all([refetchWeather(), refetchForecast()]);
+  };
 
   if (error) {
     return (
@@ -46,6 +52,7 @@ export function WeatherDashboard() {
               tomorrowMinMax={forecast?.tomorrow}
               coords={selectedCoords}
               tomorrowForecasts={forecast?.tomorrowMorningAfternoon}
+              onRefresh={handleRefresh}
             />
             {forecast?.hourly && <HourlyForecast forecasts={forecast.hourly} />}
           </>
