@@ -11,7 +11,7 @@ export function WeatherSummary({ lat, lon, address }: WeatherSummaryProps) {
   const { data: weatherData, isLoading: isWeatherLoading } = useWeatherByCoords(
     lat,
     lon,
-    address
+    address,
   );
   const { data: forecastData, isLoading: isForecastLoading } =
     useForecastByCoords(lat, lon);
@@ -32,10 +32,10 @@ export function WeatherSummary({ lat, lon, address }: WeatherSummaryProps) {
           <span className="text-2xl font-bold">{weatherData.temperature}°</span>
         </div>
       )}
-      {forecastData?.minMax && (
+      {forecastData?.today && (
         <div className="text-sm text-gray-600">
-          <div>최고 {forecastData.minMax.max}°</div>
-          <div>최저 {forecastData.minMax.min}°</div>
+          <div>최고 {forecastData.today.max}°</div>
+          <div>최저 {forecastData.today.min}°</div>
         </div>
       )}
     </div>

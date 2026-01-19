@@ -23,15 +23,12 @@ export function FavoritePage() {
     <div className="min-h-screen bg-gray-100">
       <Header />
       <Navigation />
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto px-4 py-8 max-w-4xl">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4">즐겨찾기</h2>
 
           {favorites.length === 0 ? (
-            <p className="text-gray-600">
-              즐겨찾는 지역을 추가해보세요. 날씨 페이지에서 하트 버튼을 클릭하면
-              추가됩니다.
-            </p>
+            <p className="text-gray-600">즐겨찾는 지역을 추가해보세요.</p>
           ) : (
             <div className="space-y-3">
               {favorites.map((city) => (

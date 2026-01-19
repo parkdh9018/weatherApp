@@ -1,4 +1,4 @@
-import { CurrentWeather } from "@/entities/weather";
+import { CurrentWeather, HourlyForecast } from "@/entities/weather";
 import {
   useWeatherByCoords,
   useForecastByCoords,
@@ -35,19 +35,20 @@ export function WeatherDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 p-4">
-        <div className="space-y-6">
-          {weather && selectedCoords && (
+    <div className="bg-gray-50 min-h-screen flex justify-center">
+      <div className="w-full max-w-4xl">
+        {weather && selectedCoords && (
+          <>
             <CurrentWeather
               weather={weather}
               isLoading={isLoading}
-              minMaxTemp={forecast?.minMax}
-              hourlyForecast={forecast?.hourly}
+              todayMinMax={forecast?.today}
+              tomorrowMinMax={forecast?.tomorrow}
               coords={selectedCoords}
             />
-          )}
-        </div>
+            {forecast?.hourly && <HourlyForecast forecasts={forecast.hourly} />}
+          </>
+        )}
       </div>
     </div>
   );

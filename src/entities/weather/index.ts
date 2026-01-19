@@ -1,5 +1,6 @@
 // UI Components
 export { CurrentWeather } from "./ui/CurrentWeather";
+export { HourlyForecast } from "./ui/HourlyForecast";
 export { WeatherIcon } from "./ui/WeatherIcon";
 export { WeatherDetail } from "./ui/WeatherDetail";
 export { WeatherSummary } from "./ui/WeatherSummary";

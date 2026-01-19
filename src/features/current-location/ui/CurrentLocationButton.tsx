@@ -1,27 +1,29 @@
 import { useCurrentLocation } from "../model/useCurrentLocation";
+import locationIcon from "../assets/location.svg";
+import { useState } from "react";
 
 export function CurrentLocationButton() {
   const { mutate, isPending } = useCurrentLocation();
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleClick = () => {
+    setIsSpinning(true);
+    mutate();
+    setTimeout(() => setIsSpinning(false), 500);
+  };
 
   return (
-    <div>
-      <button
-        onClick={() => mutate()}
-        disabled={isPending}
-        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 transition flex items-center gap-2 whitespace-nowrap"
-      >
-        {isPending ? (
-          <>
-            <span className="animate-spin">⟳</span>
-            <span>위치 가져오는 중...</span>
-          </>
-        ) : (
-          <>
-            <span>📍</span>
-            <span>현재 위치</span>
-          </>
-        )}
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      disabled={isPending}
+      className="hover:scale-110 transition-transform disabled:opacity-50"
+      title={isPending ? "위치 가져오는 중..." : "현재 위치"}
+    >
+      <img
+        src={locationIcon}
+        alt="현재 위치"
+        className={`w-6 h-6 ${isSpinning ? "animate-[spin_0.5s_ease-in-out]" : ""}`}
+      />
+    </button>
   );
 }

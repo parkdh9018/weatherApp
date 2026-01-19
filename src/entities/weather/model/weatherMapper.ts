@@ -7,7 +7,7 @@ import type {
 
 export const transformWeatherData = (
   data: WeatherApiResponse,
-  customAddress: string
+  customAddress: string,
 ): WeatherData => {
   return {
     city: customAddress || data.name, // 카카오 주소 우선 사용
@@ -26,26 +26,64 @@ export const transformWeatherData = (
  * Forecast 데이터에서 당일 최저/최고 기온 추출
  */
 export const getTodayMinMaxTemp = (
-  data: ForecastApiResponse
+  data: ForecastApiResponse,
 ): { min: number; max: number } => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const todayDateString = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
   const todayForecasts = data.list.filter((item) => {
     const itemDate = new Date(item.dt * 1000);
-    return itemDate >= today && itemDate < tomorrow;
+    const itemDateString = itemDate.toISOString().split("T")[0];
+    return itemDateString === todayDateString;
   });
 
   if (todayForecasts.length === 0) {
     return { min: 0, max: 0 };
   }
 
-  const temps = todayForecasts.map((item) => item.main.temp);
+  // temp, temp_min, temp_max 모두 고려
+  const allTemps = todayForecasts.flatMap((item) => [
+    item.main.temp,
+    item.main.temp_min,
+    item.main.temp_max,
+  ]);
+
   return {
-    min: Math.round(Math.min(...temps)),
-    max: Math.round(Math.max(...temps)),
+    min: Math.round(Math.min(...allTemps) * 10) / 10,
+    max: Math.round(Math.max(...allTemps) * 10) / 10,
+  };
+};
+
+/**
+ * Forecast 데이터에서 내일 최저/최고 기온 추출
+ */
+export const getTomorrowMinMaxTemp = (
+  data: ForecastApiResponse,
+): { min: number; max: number } => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowDateString = tomorrow.toISOString().split("T")[0]; // YYYY-MM-DD
+
+  const tomorrowForecasts = data.list.filter((item) => {
+    const itemDate = new Date(item.dt * 1000);
+    const itemDateString = itemDate.toISOString().split("T")[0];
+    return itemDateString === tomorrowDateString;
+  });
+
+  if (tomorrowForecasts.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
+  // temp, temp_min, temp_max 모두 고려
+  const allTemps = tomorrowForecasts.flatMap((item) => [
+    item.main.temp,
+    item.main.temp_min,
+    item.main.temp_max,
+  ]);
+
+  return {
+    min: Math.round(Math.min(...allTemps) * 10) / 10,
+    max: Math.round(Math.max(...allTemps) * 10) / 10,
   };
 };
 
@@ -53,7 +91,7 @@ export const getTodayMinMaxTemp = (
  * Forecast 데이터에서 시간대별 예보 추출 (다음 24시간)
  */
 export const getHourlyForecast = (
-  data: ForecastApiResponse
+  data: ForecastApiResponse,
 ): HourlyForecast[] => {
   const now = new Date();
   const next24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);

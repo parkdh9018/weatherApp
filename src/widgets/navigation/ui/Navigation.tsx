@@ -10,12 +10,14 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 export function Navigation() {
   return (
-    <div className="flex gap-2 border-b">
-      {NAV_ITEMS.map((item) => (
-        <NavLink key={item.to} to={item.to} className={getNavLinkClass}>
-          {item.label}
-        </NavLink>
-      ))}
+    <div className="bg-white border-b flex justify-center">
+      <div className="flex gap-2 max-w-4xl w-full px-4">
+        {NAV_ITEMS.map((item) => (
+          <NavLink key={item.to} to={item.to} className={getNavLinkClass}>
+            {item.label}
+          </NavLink>
+        ))}
+      </div>
     </div>
   );
 }

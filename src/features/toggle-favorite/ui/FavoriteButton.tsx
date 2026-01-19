@@ -1,5 +1,7 @@
 import { useFavoritesStore } from "@/shared/model";
 import { MAX_FAVORITES } from "@/shared/model/store";
+import favoriteIcon from "../assets/favorite.svg";
+import favoriteFilledIcon from "../assets/favorite_filled.svg";
 
 interface FavoriteButtonProps {
   address: string;
@@ -22,10 +24,14 @@ export function FavoriteButton({ address, coords }: FavoriteButtonProps) {
   return (
     <button
       onClick={handleToggle}
-      className="text-2xl hover:scale-110 transition-transform"
+      className="hover:scale-110 transition-transform"
       title={favorite ? "즐겨찾기 제거" : "즐겨찾기 추가"}
     >
-      {favorite ? "♥" : "♡"}
+      <img
+        src={favorite ? favoriteFilledIcon : favoriteIcon}
+        alt={favorite ? "즐겨찾기" : "즐겨찾기 추가"}
+        className="w-6 h-6"
+      />
     </button>
   );
 }

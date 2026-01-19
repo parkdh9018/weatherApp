@@ -4,13 +4,14 @@ import { weatherApi } from "../api/weatherApi";
 import {
   transformWeatherData,
   getTodayMinMaxTemp,
+  getTomorrowMinMaxTemp,
   getHourlyForecast,
 } from "./weatherMapper";
 
 export const useWeatherByCoords = (
   lat: number,
   lon: number,
-  customAddress: string
+  customAddress: string,
 ) => {
   return useQuery({
     queryKey: ["weather", "coords", lat, lon],
@@ -30,22 +31,13 @@ export const useForecastByCoords = (lat: number, lon: number) => {
     queryFn: async () => {
       const data = await weatherApi.getForecastByCoords(lat, lon);
       return {
-        minMax: getTodayMinMaxTemp(data),
+        today: getTodayMinMaxTemp(data),
+        tomorrow: getTomorrowMinMaxTemp(data),
         hourly: getHourlyForecast(data),
       };
     },
     enabled: !!(lat && lon),
     staleTime: 30 * 60 * 1000, // 30분
-    retry: 2,
-  });
-};
-
-export const useCoordinatesByCity = (cityName: string) => {
-  return useQuery({
-    queryKey: ["coordinates", cityName],
-    queryFn: async () => await geocodingApi.getCoordsByAddress(cityName),
-    enabled: !!cityName && cityName.length > 0,
-    staleTime: 30 * 60 * 1000, // 30분 (좌표는 자주 변하지 않음)
     retry: 2,
   });
 };

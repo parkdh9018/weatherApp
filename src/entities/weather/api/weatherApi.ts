@@ -6,10 +6,10 @@ const BASE_URL = "https://api.openweathermap.org/data/2.5";
 export const weatherApi = {
   getCurrentWeatherByCoords: async (
     lat: number,
-    lon: number
+    lon: number,
   ): Promise<WeatherApiResponse> => {
     const response = await fetch(
-      `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`
+      `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`,
     );
 
     if (!response.ok) {
@@ -21,10 +21,10 @@ export const weatherApi = {
 
   getForecastByCoords: async (
     lat: number,
-    lon: number
+    lon: number,
   ): Promise<ForecastApiResponse> => {
     const response = await fetch(
-      `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`
+      `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`,
     );
 
     if (!response.ok) {
