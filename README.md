@@ -1,73 +1,89 @@
-# React + TypeScript + Vite
+# 날씨 앱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 실행 방법
 
-Currently, two official plugins are available:
+```bash
+# 의존성 설치
+npm install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 개발 서버 실행
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+배포 URL: https://weather-app-sable-ten-62.vercel.app/
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 구현한 기능에 대한 설명
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1. 날씨
+
+- 페이지 진입 시 현재 위치의 날씨를 자동으로 보여줍니다.
+- 현재 날씨와 내일 날씨(오전/오후) 정보를 간략하게 볼 수 있습니다.
+- 하단에는 오늘의 시간대별 날씨와 상세 정보(습도, 풍속, 체감온도, 기압)가 표시됩니다.
+- 지역명 오른쪽의 위치 버튼을 누르면 현재 위치로 이동할 수 있습니다.
+- 페이지 오른쪽 위의 검색창에서 원하는 지역을 검색할 수 있습니다.
+
+### 2. 즐겨찾기
+
+- 날씨 페이지의 지역명 왼쪽 별표 버튼으로 즐겨찾기 등록/해제가 가능합니다.
+- 최대 6개까지 즐겨찾기를 등록할 수 있습니다.
+- 즐겨찾기 페이지에서 등록한 지역 목록과 간략한 날씨 정보를 볼 수 있습니다.
+- 각 지역에 별명을 설정할 수 있으며, 편집/삭제가 가능합니다.
+- 즐겨찾기 데이터는 localStorage에 저장되어 유지됩니다.
+
+## 기술적 의사결정 및 이유
+
+### FSD (Feature-Sliced Design)
+
+평소 이 구조에 대해 관심이 있었는데, 이번 기회에 직접 설계해 볼 수 있어서 좋은 경험이었습니다. 기본적인 내용은 공식 문서와 인터넷 자료를 참고하여 작성하였지만, 아직 익숙하지 않아 어떤 기능이 어떤 레이어에 들어가야 하는지 고심을 많이 했습니다. 특히 전역 store의 경우, `app`에 들어가야 하는지 `shared`에 들어가야 하는지 마지막까지 고민했으며, 최종적으로 애플리케이션 레벨의 전역 상태는 `app/store`에 배치하는 것으로 결정했습니다.
+
+### 좌표 기반 날씨 조회 통일
+
+초기에는 도시명과 좌표 두 가지 방식으로 날씨를 조회했으나, 개발 과정에서 다음과 같은 문제점을 발견했습니다:
+
+- 같은 지역에 대해 중복된 API 호출 발생
+- 도시명 기반 조회 시 정확도가 떨어지는 경우 존재
+- 데이터 흐름이 복잡하고 일관성 없음
+
+이를 해결하기 위해 **좌표 기반 조회로 통일**하는 리팩토링을 진행했습니다. 모든 주소는 Kakao Maps API를 통해 좌표로 변환한 뒤, OpenWeatherMap API에서 좌표로만 날씨를 조회하도록 변경했습니다. 이를 통해 API 호출 중복을 제거하고, 일관성 있는 데이터 흐름을 구성할 수 있었습니다.
+
+### Vercel
+
+지금까지 GitHub Pages를 통해서만 배포를 해봤는데, Vercel을 사용해 본 것은 처음이었습니다. 체감상 가장 큰 차이는 편의성입니다. 메인 브랜치에 커밋을 push하는 것만으로 자동 배포가 되고, SPA에서 새로고침 시 발생하는 404 에러 문제를 `vercel.json` 파일 하나로 간단히 해결할 수 있었던 점이 가장 기억에 남습니다. 향후 다른 프로젝트를 배포할 때도 Vercel을 우선적으로 고려할 것 같습니다.
+
+## 사용한 기술 스택
+
+### Frontend
+
+- **React 18** - UI 라이브러리
+- **TypeScript** - 타입 안정성
+- **Vite** - 빌드 도구 및 개발 서버
+
+### Styling
+
+- **Tailwind CSS** - 유틸리티 기반 CSS 프레임워크
+
+### State Management
+
+- **Zustand** - 전역 상태 관리 (선택 지역, 즐겨찾기)
+- **TanStack Query (React Query)** - 서버 상태 관리 및 캐싱
+
+### Routing
+
+- **React Router v6** - 클라이언트 사이드 라우팅
+
+### API
+
+- **OpenWeatherMap API** - 날씨 데이터 (현재 날씨 및 5일 예보)
+- **Kakao Maps API** - 주소 검색 및 좌표 변환
+
+### UI/UX
+
+- **react-toastify** - 토스트 알림
+
+### Architecture
+
+- **Feature-Sliced Design (FSD)** - 확장 가능한 프론트엔드 아키텍처
+
+### Deployment
+
+- **Vercel** - 자동 배포 및 호스팅
