@@ -1,7 +1,7 @@
 import type { FavoriteCity } from "@/app/store";
 import { useState } from "react";
 import { WeatherSummary } from "@/entities/weather";
-import { NicknameEditor } from "./NicknameEditor";
+import { NicknameEditor } from "@/features/edit-nickname";
 import { formatAddressDisplay } from "@/shared/lib/formatAddress";
 
 interface FavoriteCityItemProps {
@@ -19,10 +19,7 @@ export function FavoriteCityItem({
 
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors gap-4">
-      <button
-        onClick={() => onCityClick(city.address, city.coords)}
-        className="flex-1 text-left flex flex-col md:flex-row md:items-center gap-4"
-      >
+      <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4">
         <div className="flex-1">
           {isEditing ? (
             <NicknameEditor
@@ -31,7 +28,10 @@ export function FavoriteCityItem({
               onCancel={() => setIsEditing(false)}
             />
           ) : (
-            <>
+            <button
+              onClick={() => onCityClick(city.address, city.coords)}
+              className="w-full text-left"
+            >
               <h3 className="text-lg font-semibold text-gray-600 hover:text-blue-800">
                 {city.nickname || formatAddressDisplay(city.address)}
               </h3>
@@ -40,19 +40,24 @@ export function FavoriteCityItem({
                   {formatAddressDisplay(city.address)}
                 </p>
               )}
-            </>
+            </button>
           )}
         </div>
 
         {/* 날씨 정보 */}
         {!isEditing && (
-          <WeatherSummary
-            lat={city.coords.lat}
-            lon={city.coords.lon}
-            address={city.address}
-          />
+          <button
+            onClick={() => onCityClick(city.address, city.coords)}
+            className="cursor-pointer"
+          >
+            <WeatherSummary
+              lat={city.coords.lat}
+              lon={city.coords.lon}
+              address={city.address}
+            />
+          </button>
         )}
-      </button>
+      </div>
       <div className="flex gap-2">
         {!isEditing && (
           <button

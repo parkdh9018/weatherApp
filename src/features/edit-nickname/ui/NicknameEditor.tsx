@@ -21,30 +21,29 @@ export function NicknameEditor({
   };
 
   return (
-    <div
-      className="flex items-center gap-2"
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className="flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
       <input
         type="text"
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
         placeholder="별칭 입력"
-        className="px-2 py-1 border rounded flex-1"
+        className="px-2 py-1 border rounded w-full"
         autoFocus
       />
-      <button
-        onClick={handleSave}
-        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        저장
-      </button>
-      <button
-        onClick={onCancel}
-        className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
-      >
-        취소
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={handleSave}
+          className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+        >
+          저장
+        </button>
+        <button
+          onClick={onCancel}
+          className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 text-sm"
+        >
+          취소
+        </button>
+      </div>
     </div>
   );
 }
