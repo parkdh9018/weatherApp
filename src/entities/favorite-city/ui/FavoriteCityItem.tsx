@@ -1,4 +1,4 @@
-import type { FavoriteCity } from "@/shared/model";
+import type { FavoriteCity } from "@/app/store";
 import { useState } from "react";
 import { WeatherSummary } from "@/entities/weather";
 import { NicknameEditor } from "./NicknameEditor";

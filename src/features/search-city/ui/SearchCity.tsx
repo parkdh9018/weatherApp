@@ -1,4 +1,4 @@
-import { useCityStore } from "@/shared/model";
+import { useCityStore } from "@/app/store";
 import { useDistrictSearch } from "../model/useDistrictSearch";
 import { useLocation, useNavigate } from "react-router-dom";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useCityStore } from "@/shared/model";
+import { useCityStore } from "@/app/store";
 import { getCurrentLocation } from "@/features/current-location";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { formatKakaoAddress } from "@/shared/lib/formatAddress";

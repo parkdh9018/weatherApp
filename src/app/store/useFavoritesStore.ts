@@ -49,7 +49,7 @@ export const useFavoritesStore = create<FavoritesState>()(
       updateNickname: (address, nickname) => {
         set((state) => ({
           favorites: state.favorites.map((fav) =>
-            fav.address === address ? { ...fav, nickname } : fav
+            fav.address === address ? { ...fav, nickname } : fav,
           ),
         }));
       },
@@ -68,7 +68,7 @@ export const useFavoritesStore = create<FavoritesState>()(
       },
     }),
     {
-      name: "favorite-cities-storage",
-    }
-  )
+      name: "favorites-storage",
+    },
+  ),
 );

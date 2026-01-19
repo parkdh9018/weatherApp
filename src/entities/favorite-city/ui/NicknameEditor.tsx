@@ -1,4 +1,4 @@
-import { useFavoritesStore } from "@/shared/model";
+import { useFavoritesStore } from "@/app/store";
 import { useState } from "react";
 
 interface NicknameEditorProps {

@@ -3,7 +3,7 @@ import {
   useWeatherByCoords,
   useForecastByCoords,
 } from "@/entities/weather/model/useWeather";
-import { useCityStore } from "@/shared/model";
+import { useCityStore } from "@/app/store";
 
 export function WeatherDashboard() {
   const selectedAddress = useCityStore((state) => state.selectedAddress);

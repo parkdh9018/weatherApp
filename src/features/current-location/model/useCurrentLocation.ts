@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useCityStore } from "@/shared/model";
+import { useCityStore } from "@/app/store";
 import { getCurrentLocation } from "../lib/getCurrentLocation";
 import { geocodingApi } from "@/entities/weather/api/geocodingApi";
 import { formatKakaoAddress } from "@/shared/lib/formatAddress";

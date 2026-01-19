@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Navigation } from "@/widgets/navigation";
-import { useFavoritesStore, useCityStore } from "@/shared/model";
+import { useFavoritesStore, useCityStore } from "@/app/store";
 import { useNavigate } from "react-router-dom";
 import { FavoriteCityItem } from "@/entities/favorite-city";
 

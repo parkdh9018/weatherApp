@@ -1,5 +1,4 @@
-import { useFavoritesStore } from "@/shared/model";
-import { MAX_FAVORITES } from "@/shared/model/store";
+import { useFavoritesStore, MAX_FAVORITES } from "@/app/store";
 import favoriteIcon from "../assets/favorite.svg";
 import favoriteFilledIcon from "../assets/favorite_filled.svg";
 
